@@ -9,9 +9,22 @@ public class Card {
     // Ace = 1 or 11,
     // depends on which value keeps player's hand closer to 21
     private Image cardImage;
+
     public Card(String suit, int value, Image cardImage) {
         this.suit = suit;
         this.value = value;
         this.cardImage = cardImage;
+    }
+
+    public String getSuit() {
+        return suit;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public Image getCardImage() {
+        return cardImage;
     }
 }

@@ -1,6 +1,13 @@
 public class Dealer {
-    private Deck deck;
-    public Dealer(Deck deck) {
-        this.deck = deck;
+    private int currentCardValue = 0;
+    public Dealer() {
+    }
+
+    public int getCurrentCardValue() {
+        return currentCardValue;
+    }
+
+    public void setCurrentCardValue(int currentCardValue) {
+        this.currentCardValue = currentCardValue;
     }
 }
