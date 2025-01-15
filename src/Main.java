@@ -5,6 +5,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class Main extends Application {
@@ -14,6 +16,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        //TODO SHOULD GET BALANCE INFO FROM TXT FILE NOT USER INPUT
         List<String> args = getParameters().getRaw();
         if (args.size() != 1) {
             System.out.println("Invalid number of arguments");
@@ -40,7 +43,21 @@ public class Main extends Application {
         pane.setCenter(gameBoard);
 
 
-        Scene root = new Scene(pane);
+        primaryStage.setTitle("Poker");
+        primaryStage.setScene(new Scene(pane));
+        primaryStage.setOnCloseRequest(event -> {
+            try {
+                FileWriter myWriter = new FileWriter("balance.txt");
+                myWriter.write("test " + player.getBalance());
+                myWriter.close();
+            } catch (IOException e){
+                System.out.println("Error occurred!");
+            }
+
+            //TODO UPDATE THIS, WRITE TO A FILE
+            System.exit(0);
+        });
+        primaryStage.show();
     }
 
 }

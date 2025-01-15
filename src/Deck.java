@@ -15,23 +15,28 @@ public class Deck {
     private void loadCards() {
         String[] suits = {"clubs", "diamonds", "hearts", "spades"};
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"};
-
+        String resourcePath = "CardImages/";
         for (String suit : suits) {
             for (String rank : ranks) {
-                String fileName = rank + "_of_" + suit;
+                String fileName = resourcePath + rank + "_of_" + suit + ".png";
                 File imageFile = new File(fileName);
                 if (!imageFile.exists()) {
+                    System.out.println("Absolute path: " + imageFile.getAbsolutePath());
                     System.out.println("Image not found");
                     System.exit(0);
                 }
-                Card card = getCard(suit, rank, fileName);
+                String imagePath = "file:" + imageFile.getAbsolutePath();
+                Card card = getCard(suit, rank, imagePath);
                 cards.add(card);
             }
         }
     }
 
     private Card getCard(String suit, String rank, String fileName) {
+        System.out.println("Went here");
+        System.out.println(fileName);
         Image image = new Image(fileName);
+
         int value;
         if (rank.equals("jack")) {
             value = 11;
