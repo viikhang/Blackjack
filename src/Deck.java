@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class Deck {
     private ArrayList<Card> cards;
+    private Image cardBack;
 
     public Deck() {
         cards = new ArrayList<>();
@@ -21,8 +22,8 @@ public class Deck {
                 String fileName = resourcePath + rank + "_of_" + suit + ".png";
                 File imageFile = new File(fileName);
                 if (!imageFile.exists()) {
-                    System.out.println("Absolute path: " + imageFile.getAbsolutePath());
-                    System.out.println("Image not found");
+//                    System.out.println("Absolute path: " + imageFile.getAbsolutePath());
+//                    System.out.println("Image not found");
                     System.exit(0);
                 }
                 String imagePath = "file:" + imageFile.getAbsolutePath();
@@ -30,11 +31,10 @@ public class Deck {
                 cards.add(card);
             }
         }
+        cardBack = new Image("file:" + resourcePath + "cardBack.png");
     }
 
     private Card getCard(String suit, String rank, String fileName) {
-        System.out.println("Went here");
-        System.out.println(fileName);
         Image image = new Image(fileName);
 
         int value;

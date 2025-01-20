@@ -1,5 +1,6 @@
 public class Dealer {
     private int currentCardValue = 0;
+
     public Dealer() {
     }
 

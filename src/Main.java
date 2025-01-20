@@ -5,8 +5,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class Main extends Application {
@@ -22,39 +21,51 @@ public class Main extends Application {
             System.out.println("Invalid number of arguments");
             System.exit(1);
         }
+
         int balance = 0;
-        try {
-            balance = Integer.parseInt(args.getFirst());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid argument given, please enter in an " +
-                    "integer value!");
+        String fileName = args.get(0);
+        try (BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
+            String line = reader.readLine();
+            balance = Integer.parseInt(line);
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
         }
+
+//        try {
+//            balance = Integer.parseInt(args.getFirst());
+//        } catch (NumberFormatException e) {
+//            System.out.println("Invalid argument given, please enter in an " +
+//                    "integer value!");
+//        }
 
         Player player = new Player(balance);
         Dealer dealer = new Dealer();
         Display display = new Display(player, dealer);
 
         VBox rightInfo = display.getBalAndButton();
+        rightInfo.setMinWidth(100);
         VBox leftChips = display.getChips();
-        HBox gameBoard = display.getGameBoard();
+        VBox gameBoard = display.getGameBoard();
         BorderPane pane = new BorderPane();
         pane.setRight(rightInfo);
         pane.setLeft(leftChips);
         pane.setCenter(gameBoard);
 
-
+        Scene scene = new Scene(pane, 800, 600);
         primaryStage.setTitle("Poker");
-        primaryStage.setScene(new Scene(pane));
+        primaryStage.setScene(scene);
+
         primaryStage.setOnCloseRequest(event -> {
             try {
                 FileWriter myWriter = new FileWriter("balance.txt");
-                myWriter.write("test " + player.getBalance());
+                String value = String.valueOf(player.getBalance());
+                myWriter.write(value);
                 myWriter.close();
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println("Error occurred!");
             }
-
-            //TODO UPDATE THIS, WRITE TO A FILE
             System.exit(0);
         });
         primaryStage.show();
