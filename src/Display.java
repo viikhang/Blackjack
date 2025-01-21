@@ -31,7 +31,7 @@ public class Display {
         this.dealer = dealer;
         this.player = player;
         deck = new Deck();
-        input = new PlayerInput(this,player,dealer,deck);
+        input = new PlayerInput(this, player, dealer, deck);
         drawChips();
         createBalanceAndButton();
         createGameBoard();
@@ -93,9 +93,16 @@ public class Display {
         balAndButton.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, null)));
     }
 
+    public void updateBalText() {
+        balInfo.setText("Balance " + player.getBalance());
+    }
+
     private void createGameBoard() {
-        dealerCards = new HBox();
-        playerCards = new HBox();
+        dealerCards = new HBox(5);
+        dealerCards.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, null)));
+        playerCards = new HBox(5);
+        playerCards.setBackground(new Background(new BackgroundFill(Color.BLUE,
+                CornerRadii.EMPTY, null)));
 
         dealerCards.setAlignment(Pos.CENTER);
         playerCards.setAlignment(Pos.CENTER);
@@ -104,8 +111,19 @@ public class Display {
         gameBoard.setAlignment(Pos.CENTER);
         //TODO add single invisible card as place holders, or just have minimum size
 
-        playerCards.getChildren().add(deck.drawRandomCard().getCardPane());
-        dealerCards.getChildren().add(deck.drawRandomCard().getCardPane());
+        //TODO, FIX THIS, IF BOTH PLAYERS DRAW THE SAME CARD, ONLY ONE WILL
+        // BE DISPLAYED!
+        Card playerCard = deck.drawRandomCard();
+        Card dealerCard = deck.drawRandomCard();
+        playerCards.getChildren().add(playerCard.getCardPane());
+        dealerCards.getChildren().add(dealerCard.getCardPane());
+        System.out.println("Testing player: " + playerCard.getValue());
+        System.out.println("Testing dealer: " + dealerCard.getValue());
+    }
+
+    public void clearGameBoard() {
+        dealerCards.getChildren().clear();
+        playerCards.getChildren().clear();
     }
 
     public VBox getBalAndButton() {

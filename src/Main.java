@@ -1,7 +1,6 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -15,13 +14,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //TODO SHOULD GET BALANCE INFO FROM TXT FILE NOT USER INPUT
         List<String> args = getParameters().getRaw();
         if (args.size() != 1) {
             System.out.println("Invalid number of arguments");
             System.exit(1);
         }
-
         int balance = 0;
         String fileName = args.get(0);
         try (BufferedReader reader =
@@ -32,13 +29,6 @@ public class Main extends Application {
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         }
-
-//        try {
-//            balance = Integer.parseInt(args.getFirst());
-//        } catch (NumberFormatException e) {
-//            System.out.println("Invalid argument given, please enter in an " +
-//                    "integer value!");
-//        }
 
         Player player = new Player(balance);
         Dealer dealer = new Dealer();

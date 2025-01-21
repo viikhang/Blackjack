@@ -6,7 +6,8 @@ import java.util.Random;
 
 public class Deck {
     private ArrayList<Card> cards;
-    private Image cardBack;
+    private Image cardBackImage;
+    private Card cardBack;
 
     public Deck() {
         cards = new ArrayList<>();
@@ -31,19 +32,22 @@ public class Deck {
                 cards.add(card);
             }
         }
-        cardBack = new Image("file:" + resourcePath + "cardBack.png");
+        cardBackImage = new Image("file:" + resourcePath + "cardBack.png");
+
+        cardBack = new Card(cardBackImage);
     }
 
     private Card getCard(String suit, String rank, String fileName) {
         Image image = new Image(fileName);
 
+        //THIS ISN't CLEAN CODE
         int value;
         if (rank.equals("jack")) {
-            value = 11;
+            value = 10;
         } else if (rank.equals("queen")) {
-            value = 12;
+            value = 10;
         } else if (rank.equals("king")) {
-            value = 13;
+            value = 10;
         } else if (rank.equals("ace")) {
             value = 1;
         } else {
@@ -58,8 +62,7 @@ public class Deck {
         return cards.get(index);
     }
 
-//    public static void main(String[] args) {
-//        Deck deck = new Deck();
-//        deck.loadCards();
-//    }
+    public Card getCardBack() {
+        return cardBack;
+    }
 }
