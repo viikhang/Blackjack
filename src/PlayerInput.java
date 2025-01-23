@@ -9,13 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class PlayerInput {
-    private Display display;
+    private final Display display;
     private boolean startedGame = false;
-    private Player player;
-    private Dealer dealer;
-    private Deck deck;
+    private final Player player;
+    private final Dealer dealer;
+    private final Deck deck;
 
-    private Card backCard = null;
+    private final Card backCard;
     private boolean drewBack = false;
 
     public PlayerInput(Display display, Player player, Dealer dealer, Deck deck) {
@@ -29,6 +29,14 @@ public class PlayerInput {
 
     public void handleStart() {
         System.out.println("Start Button");
+        if(player.getCurrentBid() == 0) {
+            Alert noBidMade = new Alert(Alert.AlertType.INFORMATION);
+            noBidMade.setTitle("Please place a bid!");
+            noBidMade.setContentText("Please place a bid to play!");
+            noBidMade.showAndWait();
+            return;
+        }
+        
         if (!startedGame) {
             //Have the player draw two cards, and then have the dealer draw
             //two cards but one of them is not revealed
@@ -37,7 +45,6 @@ public class PlayerInput {
             startedGame = true;
             handleDealerDraw();
         }
-
     }
 
     public void handlePlayerDraw() {
@@ -53,7 +60,7 @@ public class PlayerInput {
             try {
                 int cardValue = card.getValue();
                 display.getPlayerCards().getChildren().add(card.getCardPane());
-                System.out.println("Card Value : "  + cardValue);
+                System.out.println("Card Value : " + cardValue);
                 player.updateValue(cardValue);
 
                 if (player.greaterThanTwentyOne()) {
@@ -78,7 +85,6 @@ public class PlayerInput {
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         pause.setOnFinished(event -> {
-            System.out.println("Why no show");
             playerBusted.show();
             resetGame();
         });
@@ -130,6 +136,7 @@ public class PlayerInput {
             winnerAlert.setTitle("Player Won!");
             winnerAlert.setContentText("You win! Dealer busted!");
             playerWon = true;
+
             //If dealer's card value is less than player's card value, then
             // they've lost
         } else if (dealer.getCurrentCardValue() < player.getCurrentCardValue()) {
@@ -155,6 +162,7 @@ public class PlayerInput {
             } else {
                 player.handleBidLoss();
             }
+
             resetGame();
         });
         pause.play();
@@ -163,6 +171,7 @@ public class PlayerInput {
     private void resetGame() {
         startedGame = false;
         drewBack = false;
+        handleClearFunds(); //Clear current bid amount
         display.clearGameBoard();
         display.updateBalText();
     }
@@ -170,7 +179,6 @@ public class PlayerInput {
     public void handleStand() {
         System.out.println("Stand button");
         //Have dealer draw now
-
         handleRemoveCardBack();
     }
 
@@ -178,17 +186,33 @@ public class PlayerInput {
         //When a chip is clicked on, need to make sure that the player currently
         //has enough funds to make a bid
         Chip chip = (Chip) stackPane.getUserData();
-
         return event -> {
             System.out.println("Chip Value: " + chip.getValue());
             System.out.println("Chip clicked!");
-            //TODO
+            int chipAmount = chip.getValue();
+            int playerBalance = player.getBalance();
+            //Check if the player has enough funds to place the bid
+            if (chipAmount > playerBalance) {
+                handleInvalidFunds();
+            } else {
+                //update player current bid and text
+                player.updateCurrentBid(chipAmount);
+                display.updateCurrentBidText();
+            }
         };
+    }
+
+    private void handleInvalidFunds() {
+        Alert invalidFundsAlert = new Alert(Alert.AlertType.INFORMATION);
+        invalidFundsAlert.setTitle("Invalid Funds");
+        invalidFundsAlert.setContentText("You do not have enough funds to " +
+                "make this bid, please place a new bid amount!");
+        handleClearFunds();
+        invalidFundsAlert.showAndWait();
     }
 
     public void handleExit() {
         System.out.println("Exit Button");
-
         try {
             FileWriter myWriter = new FileWriter("balance.txt");
             String value = String.valueOf(player.getBalance());
@@ -199,5 +223,10 @@ public class PlayerInput {
         }
 
         System.exit(0);
+    }
+
+    public void handleClearFunds() {
+        player.resetCurrentBid();
+        display.updateCurrentBidText();
     }
 }

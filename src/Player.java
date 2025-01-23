@@ -25,7 +25,11 @@ public class Player {
     }
 
     public void updateCurrentBid(int value) {
-        currentBid = value;
+        currentBid += value;
+    }
+
+    public void resetCurrentBid() {
+        currentBid = 0;
     }
 
 

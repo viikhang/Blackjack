@@ -20,10 +20,12 @@ public class Display {
 
     private Text balInfo;
     private Text currentBid;
+    private Text currentCardValue;
     private Button startButton;
     private Button drawCard;
     private Button standButton;
     private Button exitButton;
+    private Button clearFunds;
 
     private VBox balAndButton;
 
@@ -76,7 +78,8 @@ public class Display {
 
     private void createBalanceAndButton() {
         balInfo = new Text("Balance " + player.getBalance());
-        currentBid = new Text("Current bid; 0");
+        currentBid = new Text("Current bid: 0");
+        currentCardValue = new Text("Current card value: 0");
 
         startButton = new Button("Start");
         startButton.setOnAction(event -> input.handleStart());
@@ -86,15 +89,21 @@ public class Display {
         standButton.setOnAction(event -> input.handleStand());
         exitButton = new Button("Exit");
         exitButton.setOnAction(event -> input.handleExit());
+        clearFunds = new Button("Reset Bid");
+        clearFunds.setOnAction(event -> input.handleClearFunds());
 
-        balAndButton = new VBox(15, balInfo, startButton, drawCard,
-                standButton, exitButton);
+        balAndButton = new VBox(15, balInfo, currentBid, currentCardValue,
+                startButton, drawCard, standButton, clearFunds, exitButton);
         balAndButton.setAlignment(Pos.CENTER);
         balAndButton.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, null)));
     }
 
     public void updateBalText() {
-        balInfo.setText("Balance " + player.getBalance());
+        balInfo.setText("Balance: " + player.getBalance());
+    }
+
+    public void updateCurrentBidText() {
+        currentBid.setText("Current bid: " + player.getCurrentBid());
     }
 
     private void createGameBoard() {

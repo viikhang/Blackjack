@@ -35,7 +35,7 @@ public class Main extends Application {
         Display display = new Display(player, dealer);
 
         VBox rightInfo = display.getBalAndButton();
-        rightInfo.setMinWidth(100);
+        rightInfo.setMinWidth(120);
         VBox leftChips = display.getChips();
         VBox gameBoard = display.getGameBoard();
         BorderPane pane = new BorderPane();
