@@ -59,12 +59,27 @@ public class PlayerInput {
             card = deck.drawRandomCard();
             try {
                 int cardValue = card.getValue();
+
+                //If the user draws an ace, then we need to check which value the ace should take on
+                if(card.getSuit().equals("ace")) {
+                    player.setHasAce(true);
+                    //Ace can either be a 1 or a 11
+                    if(player.getCurrentCardValue() >= 11) {
+                        cardValue = 1; //If current hand greater than 11, then ace must be a one
+                    } else {
+                        cardValue = 11;
+                    }
+                }
+
+
                 display.getPlayerCards().getChildren().add(card.getCardPane());
                 System.out.println("Card Value : " + cardValue);
                 player.updateValue(cardValue);
 
+                
+
                 if (player.greaterThanTwentyOne()) {
-                    System.out.println("went here");
+                    System.out.println("Player busted!");
                     handleBust();
                 }
 

@@ -2,6 +2,7 @@ public class Player {
     private int balance;
     private int currentBid = 0;
     private int currentCardValue = 0;
+    private boolean hasAce = false;
 
     public Player(int balance) {
         this.balance = balance;
@@ -51,5 +52,13 @@ public class Player {
 
     public int getCurrentBid() {
         return currentBid;
+    }
+
+    public boolean isHasAce() {
+        return hasAce;
+    }
+
+    public void setHasAce(boolean hasAce) {
+        this.hasAce = hasAce;
     }
 }

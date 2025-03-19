@@ -123,7 +123,12 @@ public class Display {
         //TODO, FIX THIS, IF BOTH PLAYERS DRAW THE SAME CARD, ONLY ONE WILL
         // BE DISPLAYED!
         Card playerCard = deck.drawRandomCard();
-        Card dealerCard = deck.drawRandomCard();
+        Card dealerCard;
+        //Ensure that the dealer and the player don't draw the same card.
+        do {
+            dealerCard = deck.drawRandomCard();
+        } while (dealerCard.equals(playerCard));
+
         playerCards.getChildren().add(playerCard.getCardPane());
         dealerCards.getChildren().add(dealerCard.getCardPane());
         System.out.println("Testing player: " + playerCard.getValue());

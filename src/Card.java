@@ -52,4 +52,11 @@ public class Card {
     public StackPane getCardPane() {
         return cardPane;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+
+
+        return super.equals(obj);
+    }
 }
