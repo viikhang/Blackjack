@@ -129,10 +129,11 @@ public class Display {
             dealerCard = deck.drawRandomCard();
         } while (dealerCard.equals(playerCard));
 
-        playerCards.getChildren().add(playerCard.getCardPane());
-        dealerCards.getChildren().add(dealerCard.getCardPane());
-        System.out.println("Testing player: " + playerCard.getValue());
-        System.out.println("Testing dealer: " + dealerCard.getValue());
+
+//        playerCards.getChildren().add(playerCard.getCardPane());
+//        dealerCards.getChildren().add(dealerCard.getCardPane());
+//        System.out.println("Testing player: " + playerCard.getValue());
+//        System.out.println("Testing dealer: " + dealerCard.getValue());
     }
 
     public void clearGameBoard() {
