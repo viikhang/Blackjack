@@ -20,7 +20,7 @@ public class Main extends Application {
             System.exit(1);
         }
         int balance = 0;
-        String fileName = args.get(0);
+        String fileName = args.getFirst();
         try (BufferedReader reader =
                      new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
             String line = reader.readLine();

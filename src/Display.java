@@ -106,6 +106,10 @@ public class Display {
         currentBid.setText("Current bid: " + player.getCurrentBid());
     }
 
+    public void updateCurrentCardValue() {
+        currentCardValue.setText("Current card value: " + player.getCurrentCardValue());
+    }
+
     private void createGameBoard() {
         dealerCards = new HBox(5);
         dealerCards.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, null)));
@@ -134,6 +138,18 @@ public class Display {
 //        dealerCards.getChildren().add(dealerCard.getCardPane());
 //        System.out.println("Testing player: " + playerCard.getValue());
 //        System.out.println("Testing dealer: " + dealerCard.getValue());
+    }
+
+    public boolean checkDealerCards(Card cardDrawn){
+        StackPane cardPane = cardDrawn.getCardPane();
+        //If the card drawn is in the dealers hand, then we need to redraw
+        return dealerCards.getChildren().contains(cardPane);
+    }
+
+    public boolean checkPlayerCards(Card cardDrawn){
+        StackPane cardPane = cardDrawn.getCardPane();
+        //If the card drawn is in the players hand, then we need to redraw a new card
+        return playerCards.getChildren().contains(cardPane);
     }
 
     public void clearGameBoard() {

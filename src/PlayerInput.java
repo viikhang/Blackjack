@@ -29,14 +29,14 @@ public class PlayerInput {
 
     public void handleStart() {
         System.out.println("Start Button");
-        if(player.getCurrentBid() == 0) {
+        if (player.getCurrentBid() == 0) {
             Alert noBidMade = new Alert(Alert.AlertType.INFORMATION);
             noBidMade.setTitle("Please place a bid!");
             noBidMade.setContentText("Please place a bid to play!");
             noBidMade.showAndWait();
             return;
         }
-        
+
         if (!startedGame) {
             //Have the player draw two cards, and then have the dealer draw
             //two cards but one of them is not revealed
@@ -48,35 +48,38 @@ public class PlayerInput {
     }
 
     public void handlePlayerDraw() {
-        //TODO NEED TO CHECK IF THE OTHER PLAYER ATTEMPTS TO DRAW THE SAME
-        // CARD, IF THEY DO, THEN WE NEED TO SKIP
-
-        //TODO NEED TO ALSO HANDLE ACE'S
         //Draw a single card and add it to players hand
         System.out.println("Draw button");
         Card card;
         while (true) {
             card = deck.drawRandomCard();
+            System.out.println("Card drawn " + card.getSuit());
             try {
+                //Check if dealer already has the card, if they do, then redraw
+                if (display.checkDealerCards(card)) {
+                    System.out.println("Happened");
+                    continue;
+                }
+
                 int cardValue = card.getValue();
 
                 //If the user draws an ace, then we need to check which value the ace should take on
-                if(card.getSuit().equals("ace")) {
+                if (card.getSuit().equals("ace")) {
                     player.setHasAce(true);
                     //Ace can either be a 1 or a 11
-                    if(player.getCurrentCardValue() >= 11) {
+                    if (player.getCurrentCardValue() >= 11) {
                         cardValue = 1; //If current hand greater than 11, then ace must be a one
                     } else {
                         cardValue = 11;
                     }
                 }
 
+                //TODO IF THE PLAYER DRAWS 21 JUST HAVE THEM WIN INSTANTLY
 
                 display.getPlayerCards().getChildren().add(card.getCardPane());
                 System.out.println("Card Value : " + cardValue);
                 player.updateValue(cardValue);
-
-                
+                display.updateCurrentCardValue();
 
                 if (player.greaterThanTwentyOne()) {
                     System.out.println("Player busted!");
@@ -85,7 +88,7 @@ public class PlayerInput {
 
                 break; // Exit the loop if no exception is thrown
             } catch (IllegalArgumentException e) {
-                // Log the issue and retry drawing another card
+                //Log the issue and retry drawing another card
                 System.out.println("Duplicate card drawn, retrying...");
             }
         }
@@ -111,6 +114,14 @@ public class PlayerInput {
         while (true) {
             card = deck.drawRandomCard();
             try {
+                //If dealer draws a card that player already has, then have the
+                // dealer draw again
+                if (display.checkPlayerCards(card)) {
+                    System.out.println("Happened 2");
+                    continue;
+
+                }
+
                 int cardValue = card.getValue();
 
                 display.getDealerCards().getChildren().add(card.getCardPane());
@@ -138,29 +149,37 @@ public class PlayerInput {
         //After removing the card back, we want to have the dealer draw a card
 
         //Have the dealer continue drawing cards until their total is greater
-        // than 17
+        //than 17
         while (dealer.getCurrentCardValue() < 17) {
             handleDealerDraw();
         }
 
         Alert winnerAlert = new Alert(Alert.AlertType.INFORMATION);
         boolean playerWon = false;
+        boolean playersTied = false;
 
+        int dealerValue = dealer.getCurrentCardValue();
+        int playerValue = player.getCurrentCardValue();
         //If the dealer's card value is over 21, then they busted
-        if (dealer.getCurrentCardValue() > 21) {
+        if (dealerValue > 21) {
             winnerAlert.setTitle("Player Won!");
             winnerAlert.setContentText("You win! Dealer busted!");
             playerWon = true;
 
             //If dealer's card value is less than player's card value, then
             // they've lost
-        } else if (dealer.getCurrentCardValue() < player.getCurrentCardValue()) {
+        } else if (dealerValue < playerValue) {
             winnerAlert.setTitle("Player Won!");
-            winnerAlert.setTitle("You win! Dealer's card value is less than " +
+            winnerAlert.setContentText("You win! Dealer's card value is less than " +
                     "yours!");
             playerWon = true;
             //Else, the dealer's card value is greater so they have won
-        } else {
+
+        } else if (dealerValue == playerValue) {
+            winnerAlert.setTitle("No One Won!");
+            winnerAlert.setContentText("Both players have the same amount of points, no one wins!");
+            playersTied = true;
+        } else { //Else, the dealer's card value is greater so they have won
             winnerAlert.setTitle("Dealer Won!");
             winnerAlert.setContentText("You lost! Dealer's card value is " +
                     "greater than yours!");
@@ -169,13 +188,15 @@ public class PlayerInput {
         PauseTransition pause = new PauseTransition(Duration.seconds(2));
 
         boolean finalPlayerWon = playerWon;
-
+        boolean finalPlayersTied = playersTied;
         pause.setOnFinished(event -> {
             winnerAlert.show();
-            if (finalPlayerWon) {
-                player.handleBidWin();
-            } else {
-                player.handleBidLoss();
+            if (!finalPlayersTied) {
+                if (finalPlayerWon) {
+                    player.handleBidWin();
+                } else {
+                    player.handleBidLoss();
+                }
             }
 
             resetGame();
@@ -183,12 +204,17 @@ public class PlayerInput {
         pause.play();
     }
 
+
     private void resetGame() {
         startedGame = false;
         drewBack = false;
+        player.setHasAce(false);
         handleClearFunds(); //Clear current bid amount
         display.clearGameBoard();
         display.updateBalText();
+        player.setCurrentCardValue(0);
+        dealer.setCurrentCardValue(0);
+        display.updateCurrentCardValue();
     }
 
     public void handleStand() {
