@@ -89,6 +89,7 @@ public class PlayerInput {
                 break; // Exit the loop if no exception is thrown
             } catch (IllegalArgumentException e) {
                 //Log the issue and retry drawing another card
+                System.out.println(e.getMessage());
                 System.out.println("Duplicate card drawn, retrying...");
             }
         }

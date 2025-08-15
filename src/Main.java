@@ -15,7 +15,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         List<String> args = getParameters().getRaw();
-        if (args.size() != 1) {
+        //Make it so that user can pick number of deck's they would like to play with
+        if (!((args.size() == 1) || args.size() == 2)) {
             System.out.println("Invalid number of arguments");
             System.exit(1);
         }
@@ -29,10 +30,14 @@ public class Main extends Application {
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         }
+        int numDecks = 20;
+        if (args.size() == 2) {
+            numDecks = Integer.parseInt(args.get(1));
+        }
 
         Player player = new Player(balance);
         Dealer dealer = new Dealer();
-        Display display = new Display(player, dealer);
+        Display display = new Display(player, dealer, numDecks);
 
         VBox rightInfo = display.getBalAndButton();
         rightInfo.setMinWidth(120);

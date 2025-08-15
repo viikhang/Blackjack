@@ -29,10 +29,10 @@ public class Display {
 
     private VBox balAndButton;
 
-    public Display(Player player, Dealer dealer) {
+    public Display(Player player, Dealer dealer, int numDecks) {
         this.dealer = dealer;
         this.player = player;
-        deck = new Deck();
+        deck = new Deck(numDecks);
         input = new PlayerInput(this, player, dealer, deck);
         drawChips();
         createBalanceAndButton();
@@ -43,7 +43,7 @@ public class Display {
         chips = new VBox();
         chips.setAlignment(Pos.CENTER);
         chips.setSpacing(10);
-        chips.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, null)));
+        chips.setBackground(new Background(new BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, null)));
 
 
         String chipPath = "ChipImages/";
@@ -95,7 +95,7 @@ public class Display {
         balAndButton = new VBox(15, balInfo, currentBid, currentCardValue,
                 startButton, drawCard, standButton, clearFunds, exitButton);
         balAndButton.setAlignment(Pos.CENTER);
-        balAndButton.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, null)));
+        balAndButton.setBackground(new Background(new BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, null)));
     }
 
     public void updateBalText() {
@@ -126,13 +126,13 @@ public class Display {
 
         //TODO, FIX THIS, IF BOTH PLAYERS DRAW THE SAME CARD, ONLY ONE WILL
         // BE DISPLAYED!
-        Card playerCard = deck.drawRandomCard();
-        Card dealerCard;
-        //Ensure that the dealer and the player don't draw the same card.
-        do {
-            dealerCard = deck.drawRandomCard();
-        } while (dealerCard.equals(playerCard));
-
+//        Card playerCard = deck.drawRandomCard();
+//        Card dealerCard;
+//        //Ensure that the dealer and the player don't draw the same card.
+//        do {
+//            dealerCard = deck.drawRandomCard();
+//        } while (dealerCard.equals(playerCard));
+        //dealerCard = deck.drawRandomCard();
 
 //        playerCards.getChildren().add(playerCard.getCardPane());
 //        dealerCards.getChildren().add(dealerCard.getCardPane());
